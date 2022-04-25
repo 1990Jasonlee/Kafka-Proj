@@ -33,6 +33,18 @@ class XactionConsumer:
                 self.custBalances[message['custid']] -= message['amt']
             print(self.custBalances)
 
+
+class Transaction(Base):
+    __tablename__ = 'transaction'
+    # Here we define columns for the table person
+    # Notice that each column is also a normal Python instance attribute.
+    id = Column(Integer, primary_key=True)
+    custid = Column(Integer)
+    type = Column(String(250), nullable=False)
+    date = Column(Integer)
+    amt = Column(Integer)
+
+
 if __name__ == "__main__":
     c = XactionConsumer()
     c.handleMessages()
