@@ -1,5 +1,12 @@
 from kafka import KafkaConsumer, TopicPartition
 from json import loads
+import sqlalchemy
+
+
+#docs.sqlalchemy.org/en/13/orm/extensions/declarative/basic_use.html
+engine = create_engine('sqlite://test.db')
+mymetadata = MetaData()
+Base = declarative_base(metadata=mymetadata)
 
 class XactionConsumer:
     def __init__(self):
@@ -48,3 +55,4 @@ class Transaction(Base):
 if __name__ == "__main__":
     c = XactionConsumer()
     c.handleMessages()
+    Base.metadata.create_all(engine)
