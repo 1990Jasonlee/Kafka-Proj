@@ -39,13 +39,7 @@ class XactionConsumer:
     conn = None
     cur = None
     try:
-        conn = psycopg2.connect(
-            # host='host',
-            # dbname='test',
-            # user='user',
-            # password='password',
-            # port=9092)
-        )
+        conn = psycopg2.connect()
         cur = conn.cursor()
 
         create_table = '''CREATE TABLE IF NOT EXISTS Transaction(
