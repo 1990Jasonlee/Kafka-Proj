@@ -36,26 +36,17 @@ class XactionConsumer:
         # add a way to connect to your database here.
 
         #Go back to the readme.
-    conn = None
-    cur = None
-    try:
-        conn = psycopg2.connect()
-        cur = conn.cursor()
+
+        self.conn = psycopg2.connect()
+        self.cur = self.conn.cursor()
 
         create_table = '''CREATE TABLE IF NOT EXISTS Transaction(
                             custid int NOT NULL,
                             type text NOT NULL,
                             date int NOT NULL,
                             amt int NOT NULL)'''
-        cur.execute(create_table)
-
-    except Exception as error:
-        print(error)
-    finally:
-        if cur is None:
-            cur.close()
-        if conn is None:
-            conn.close()
+        self.cur.execute(create_table)
+        self.conn.commit()
 
     def handleMessages(self):
         for message in self.consumer:
@@ -71,12 +62,13 @@ class XactionConsumer:
                 self.custBalances[message['custid']] -= message['amt']
             print(self.custBalances)
 
+            self.cur = self.conn.cursor()
             messages = (message['custid'], message['type'], message['date'], message['amt'])
             insert_table = 'INSERT INTO Transaction (custid, type, date, amt) VALUES (%s, %s, %s, %s)'
             self.cur.execute(insert_table, messages)
             self.conn.commit()
 
+
 if __name__ == "__main__":
     c = XactionConsumer()
     c.handleMessages()
-#    Base.metadata.create_all(engine)
