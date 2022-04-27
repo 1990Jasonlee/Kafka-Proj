@@ -58,11 +58,11 @@ class XactionConsumer:
                 self.custBalances[message['custid']] = 0
             if message['type'] == 'dep':
                 self.custBalances[message['custid']] += message['amt']
-            if message['type'] == 'wth' and self.custBalances[message['custid']] < self.limit:
-                print('Over cash limit')
             else:
                 self.custBalances[message['custid']] -= message['amt']
-            print(self.custBalances)
+            for key, value in self.custBalances.items():
+                if value < self.limit:
+                    print('Over cash limit', key, value)
 
             self.cur = self.conn.cursor()
             messages = (message['custid'], message['type'], message['date'], message['amt'])
